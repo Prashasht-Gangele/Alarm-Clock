@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.3.1/css/bootstrap.min.css"
+        integrity="sha384-ggOyR0iXCbMQv3Xipma34MD+dH/1fQ784/j6cY/iJTQUOhcWr7x9JvoRxT2MZw1T" crossorigin="anonymous">
+    <title>Document</title>
+</head>
+
+<body>
+
+
+    <div class="container my-3">
+        <h1>Set alarm</h1>
+        <h2><span id="datetime"></span></h2>
+        <form>
+            <div class="form-group">
+                <label for="alarm">Enter the time in yyyy-mm-dd hh:mm:ss</label>
+                <input type="text" class="form-control" id="alarm" name="alarm"
+                    placeholder="Enter the time in yyyy-mm-dd hh:mm:ss">
+
+                <h3 id="snz" class="form-text text-muted"></h3>
+            </div>
+
+
+            <button id="alarmSubmit" type="submit" class="btn btn-primary">Set Alarm</button>
+            <button id="snooze" type="submit" class="btn btn-primary">Snooze</button>
+            <button id="delAlarm" type="submit" class="btn btn-primary">Delete Alarm</button>
+
+        </form>
+
+    </div>
+    </div>
+
+</body>
+
+<script>
+
+    const alarmSubmit = document.getElementById('alarmSubmit');
+    const snoozebtn = document.getElementById('snooze');
+    const delBtn = document.getElementById('delAlarm');
+
+    // Add an event listener to the submit button
+    alarmSubmit.addEventListener('click', setAlarm);
+    snoozebtn.addEventListener('click', snoozeFunc);
+    delBtn.addEventListener('click', delFunc);
+    var audio = new Audio('http://codeskulptor-demos.commondatastorage.googleapis.com/GalaxyInvaders/bonus.wav');
+
+    // function to play the alarm ring tone
+    function ringBell() {
+        audio.play();
+    }
+    // limit
+    function limitAlarm() {
+
+        var count = 0;
+        count++;
+        console.log(count);
+
+        if (count > 3) {
+            document.getElementById("snooze").disabled = true;
+            alert("Maximum Alam limit is 3");
+        }
+    }
+
+    // This function will run whenever alarm is set from the
+    function setAlarm(e) {
+        e.preventDefault();
+        var alarm = document.getElementById('alarm');
+        var alarmDate = new Date(alarm.value);
+        console.log(`Setting Alarm for ${alarmDate}...`);
+        var now = new Date();
+
+        var timeToAlarm = alarmDate - now;
+        console.log(timeToAlarm);
+        if (timeToAlarm >= 0) {
+        setTimeout(() => {
+                console.log("Ringing now")
+                ringBell();
+            }, timeToAlarm);
+        }
+
+    }
+
+    // snooze 
+    function snoozeFunc(event) {
+        console.log("snooze");
+        event.preventDefault();
+        var alarm2 = document.getElementById('alarm');
+        var alarmDate2 = new Date(alarm2.value);
+
+        var now2 = new Date();
+        var timeToAlarm2 = alarmDate2 - now2;
+
+        var curr = timeToAlarm2 + 300000;
+        console.log(`Setting Alarm for ${timeToAlarm2}...`);
+        console.log(`${curr}`);
+
+        document.getElementById('snz').innerHTML = "Alarm snooze for 5 min";
+        setTimeout(() => {
+            console.log("Ringing now")
+            ringBell();
+        }, curr);
+        limitAlarm();
+
+    }
+
+
+    // current time date
+
+    var today = new Date();
+    var date = today.getFullYear() + '-' + (today.getMonth() + 1) + '-' + today.getDate();
+    var time = today.getHours() + ":" + today.getMinutes() + ":" + today.getSeconds();
+    document.getElementById("datetime").innerHTML = "Time-" + time + " " + "Date-" + date;
+
+
+    // delete alarm
+    function delFunc(e) {
+        e.preventDefault();
+        clearTimeout(setAlarm);
+        console.log("clr");
+    }
+
+</script>
+
+</html>
